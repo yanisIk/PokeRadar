@@ -1,0 +1,26 @@
+<ion-header>
+	<ion-navbar primary>
+	  <ion-title><img class="logo" src="/img/180x180.png">PokéRadar</ion-title>
+
+	  <ion-buttons end>
+			<button (click)="showOptionsModal()"><ion-icon name="options"></ion-icon></button>  
+	  </ion-buttons>
+
+	</ion-navbar>
+</ion-header>
+
+<ion-content class="radarPage">
+  <div *ngIf="!(isOnline$ | async)" #pleaseConnect id="please-connect">
+		<p>Please connect to the Internet...</p>
+	</div>
+
+	<div *ngIf="(isScanning$ | async)" #scanAnimation id="scanning" class="scanning">
+		<div class="spinner"></div>
+	</div>
+
+  <div #map id="map"></div>
+	<div class="halo">
+  	<span class="ring ring-2"></span>
+		<span class="ring ring-3"></span>
+	</div>
+</ion-content>

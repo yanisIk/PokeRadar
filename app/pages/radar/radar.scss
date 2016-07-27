@@ -1,0 +1,118 @@
+.radarPage {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: opacity 150ms ease-in
+}
+
+.scanning {
+    position: absolute;
+    top: 5%;
+    right: 10%;
+    z-index: 5;
+}
+
+.scroll {
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+}
+
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    top: 18%;
+    left: 0%;
+    width: 100%;
+    height: 60%;
+    z-index: 1;
+    animation: pulse 5s ease-out infinite;
+    
+    &.ring-2 {
+        animation-delay: 1000ms
+    }
+    &.ring-3 {
+        animation-delay: 3000ms
+    }
+		
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 45px rgba(#bc26ba, 1);
+        transform: scale(0);
+        opacity: 0;
+    }
+    
+    25% {
+        box-shadow: 0 0 0 20px rgba(#4f2fc8, 0.66);
+        opacity: 1;
+    }
+    
+    50% {
+        box-shadow: 0 0 0 10px rgba(#5eb9e6, 0.33);
+    }
+    
+    100% {
+        box-shadow: 0 0 0 1px rgba(#00abff, 0);
+        transform: scale(1);
+    }
+}
+
+.spinner{
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-color: #D8D8D8;
+  border: 3px solid #00abff;;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%) translateZ(0);
+  background-image: url('/img/radar_image.jpg');
+  background-size: 200%;
+  -webkit-animation: gridLoop 10s infinite linear;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  
+}
+@-webkit-keyframes gridLoop{
+  0%{background-position: -5px 0%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+  10%{background-position: -5px 50%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+  15%{background-position: -5px 50%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+ 17%{background-position: -305px 50%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+  19%{background-position: -305px 50%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+  25%{background-position: -305px 00%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(0deg);}
+  27%{background-position: -305px 00%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(90deg);}
+  35%{background-position: -305px 200%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(90deg);}
+  40%{background-position: -305px 200%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(90deg);}
+  45%{background-position: -305px 100%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(90deg);}
+  55%{background-position: -105px 100%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(90deg);}
+  60%{background-position: -105px 100%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  63%{background-position: -105px 100%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  70%{background-position: 105px 0%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  73%{background-position: 105px 0%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  75%{background-position: 205px 0%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  78%{background-position: 205px 50%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  82%{background-position: 105px 150%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  86%{background-position: 105px 150%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(270deg);}
+  88%{background-position: 105px 120%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(360deg);}
+  94%{background-position: 105px 180%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(360deg);}
+  98%{background-position: 105px 180%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(360deg);}
+  100%{background-position: -5px 0%;transform: translateX(-50%) translateY(-50%) translateZ(0) rotate(360deg);}
+}
