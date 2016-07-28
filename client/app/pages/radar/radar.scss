@@ -5,10 +5,30 @@
     transition: opacity 150ms ease-in
 }
 
+.footerStats {
+    position: absolute;
+    bottom: 4%;
+    left: 2%;
+    z-index: 5;
+}
+
+.pokeballSmall {
+    left: -2%;
+    width: 10%;
+    height: 10%;
+}
+
+.radarToggle {
+    position: absolute;
+    top: 2%;
+    right: 3%;
+    z-index: 5;
+}
+
 .scanning {
     position: absolute;
     top: 5%;
-    right: 10%;
+    left: 10%;
     z-index: 5;
 }
 
@@ -44,7 +64,7 @@
     animation: pulse 5s ease-out infinite;
     
     &.ring-2 {
-        animation-delay: 1000ms
+        animation-delay: 10ms
     }
     &.ring-3 {
         animation-delay: 3000ms

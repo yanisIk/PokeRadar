@@ -10,21 +10,28 @@ export class PokeradarService {
   private _isScanning$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   private _currentPokemons$: BehaviorSubject<Set<any>> = new BehaviorSubject(new Set());
   private _lastPokemon$: BehaviorSubject<any> = BehaviorSubject.create();
+  private _isRadarOn$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private geoSubscription: any;
 
   public isScanning$: Observable<boolean> = this._isScanning$.asObservable();
-  public currentPokemon$: Observable<Set<any>> = this._currentPokemons$.asObservable();
+  public currentPokemons$: Observable<Set<any>> = this._currentPokemons$.asObservable();
   public lastPokemon$: Observable<any> = this._lastPokemon$.asObservable();
+  public isRadarOn$: Observable<any> = this._isRadarOn$.asObservable();
 
   private API_URL: String = "https://pokevision.com/map/data";
   private previousLocation: any = {latitude: 0, longitude: 0};
 
   constructor(private http: Http, private geolocationService: GeolocationService) {
-    this.startRadar();
+    //Let the user start it
+    //this.startRadar();
   }
 
-  startRadar(): void {
-    this.geolocationService.currentPosition$
-    .debounceTime(3000)
+  private startRadar(): void {
+    this.stopRadar();
+    this._isRadarOn$.next(true);
+    console.log('RADAR ACTIVATED');
+    this.geoSubscription = this.geolocationService.currentPosition$
+    .debounceTime(1000)
     .distinctUntilChanged()
     .subscribe((pos) => {
         console.log('RADAR POSITION TICK: ', pos.latitude, pos.longitude);
@@ -32,16 +39,20 @@ export class PokeradarService {
         //This is used to throttle requests
         if (this.geolocationService.calculateDistance(this.previousLocation, pos)
             < this.geolocationService.DISTANCE_THRESHOLD_IN_METERS) {
+                console.log('DISTANCE TOO LOW');
                 this.previousLocation = pos;
                 return;
         }
         this.previousLocation = pos;
-        this.scanAreaV2(pos.latitude, pos.longitude)
+        this.scanArea(pos.latitude, pos.longitude)
         .then((pokemons) => {
             if (!pokemons) {
                 return;
             }
             console.log('RADAR DETECTED POKEMONS:', pokemons);
+            //Empty current list
+            this._currentPokemons$.next(new Set());
+            //Fill it
             pokemons.forEach((pokemon) => {
                 if (!this._currentPokemons$.getValue().has(pokemon)) {
                     this._lastPokemon$.next(pokemon);
@@ -52,6 +63,19 @@ export class PokeradarService {
         });
 
     });
+  }
+
+  private stopRadar(): void {
+      if (!this.geoSubscription) {
+          return;
+      }
+      this.geoSubscription.unsubscribe();
+      this._isRadarOn$.next(false);
+      console.log('RADAR DEACTIVATED');
+  }
+
+  toggleRadar(): void {
+      this._isRadarOn$.getValue() ? this.stopRadar() : this.startRadar();
   }
 
   private scanArea(lat: number, long: number): Promise<any> {
@@ -124,9 +148,5 @@ export class PokeradarService {
             });
       });
   }
-
-  stopRadar(): void {
-
-  }  
 
 }

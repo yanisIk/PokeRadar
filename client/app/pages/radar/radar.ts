@@ -28,6 +28,8 @@ export class RadarPage {
   private userMarker: any;
   isScanning$: Observable<boolean>;
   isOnline$: Observable<boolean>;
+  isRadarOn$: Observable<boolean>;
+  currentPokemons$: Observable<Set<any>>;
 
   constructor(private _navController: NavController, private platform: Platform,
               private geolocationService: GeolocationService,
@@ -36,6 +38,12 @@ export class RadarPage {
               private connectivityService: ConnectivityService) {
       this.isScanning$ = pokeradarService.isScanning$;
       this.isOnline$ = connectivityService.connectionStatus$;
+      this.isRadarOn$ = pokeradarService.isRadarOn$;
+      this.currentPokemons$ = pokeradarService.currentPokemons$;
+  }
+
+  toggleRadar() {
+    this.pokeradarService.toggleRadar();
   }
 
   ngAfterViewInit() {
@@ -58,26 +66,32 @@ export class RadarPage {
    * Init map and set it to current position
    */
   private initMap(): Promise<any> {
-      var currentPosition = {lat: 45.503687, long: -73.6286305};
-      let mapOptions = {
-        zoom: 17,
-        minZoom: this.minZoom,
-        maxZoom: this.maxZoom,
-        draggable: false,
-        disableDefaultUI: true,
-        center: new google.maps.LatLng(currentPosition.lat, currentPosition.long),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        styles: this.pokemonMapStyle
-      };
+      return new Promise((resolve, reject) => {
 
-      let mapDiv = this.mapElement.nativeElement;
-      this.map = new google.maps.Map(mapDiv, mapOptions);
-      this.userMarker = new google.maps.Marker({position: {lat: currentPosition.lat, lng: currentPosition.long}, 
-                                                map: this.map,
-                                                animation: google.maps.Animation.DROP,
-                                                icon: '/img/Pokemon_Trainer_Red.png'
-                                              });
-      return Promise.resolve();
+        this.geolocationService.currentPosition$.first().subscribe((currentPosition) => {
+          console.log('INITIALIZING MAP');
+          let mapOptions = {
+            zoom: 17,
+            minZoom: this.minZoom,
+            maxZoom: this.maxZoom,
+            draggable: false,
+            disableDefaultUI: true,
+            center: new google.maps.LatLng(currentPosition.latitude, currentPosition.longitude),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            styles: this.pokemonMapStyle
+          };
+          
+          let mapDiv = this.mapElement.nativeElement;
+          this.map = new google.maps.Map(mapDiv, mapOptions);
+          this.userMarker = new google.maps.Marker({position: {lat: currentPosition.latitude, lng: currentPosition.longitude}, 
+                                                    map: this.map,
+                                                    animation: google.maps.Animation.DROP,
+                                                    icon: '/img/Pokemon_Trainer_Red.png'
+                                                  });
+          return resolve();
+        });
+      });
+      
   }
 
   /**

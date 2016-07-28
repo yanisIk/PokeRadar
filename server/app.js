@@ -52,8 +52,7 @@ app.use(expressValidator());
 
 
 app.get('/', function (req, res) {res.send("PokeRadar API");});
-app.post('/radar', auth.isMobileApp, validators.validateRadarRequest, radarController.findPokemons)
-
+app.post('/radar', auth.hasAPIKey, validators.validateRadarRequest, radarController.findPokemons);
 
 /**
  * Start Express server

@@ -10,7 +10,7 @@ exports.findPokemons = function(req, res, next) {
   let loginInformations = {username: req.body.username, password: req.body.password, token: req.body.token};
   pokemonGoService.findPokemons(coords, loginInformations)
   .then((pokemons) => {
-    res.json(pokemons);
+    res.status(200).send(pokemons);
   })
   .catch((err) => {
     console.error(err);
