@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Platform} from 'ionic-angular';
 import {Geolocation} from 'ionic-native';
-import { Observable, Observer, BehaviorSubject } from 'rxjs';
-import 'rxjs/add/operator/share';
+import {Observable, BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class GeolocationService {
@@ -19,29 +18,17 @@ export class GeolocationService {
 
   startGeoWatch(): void {
     this.stopGeoWatch();
-    if (this.platform.is('cordova')) {
-      this.positionWatch = Geolocation.watchPosition();
-      this.positionWatch.subscribe((newPos) => {
-          console.log('GPS tick');
-          if (newPos.coords)
-            this._currentPosition$.next(newPos.coords);
-      });
-    } else {
-      this.navGeoWatchId = navigator.geolocation.watchPosition((newPos) => {
-        console.log('Nav GPS tick', newPos.coords);
+    this.positionWatch = Geolocation.watchPosition();
+    this.positionWatch.subscribe((newPos) => {
+        console.log('GPS tick');
         if (newPos.coords)
           this._currentPosition$.next(newPos.coords);
-      },
-      (err) => console.warn('ERROR(' + err.code + '): ' + err.message),
-      {enableHighAccuracy: true});
-    }
+    });
   }
 
   stopGeoWatch(): void {
     if (this.positionWatch)
         this.positionWatch.unsubscribe();
-    if (this.navGeoWatchId)
-        navigator.geolocation.clearWatch(this.navGeoWatchId);
   }
 
   /**

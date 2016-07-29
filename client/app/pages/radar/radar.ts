@@ -26,10 +26,11 @@ export class RadarPage {
   private minZoom: Number = 15;
   private maxZoom: Number = 20;
   private userMarker: any;
+  private pokemonMarkers: Set<any> = new Set();
   isScanning$: Observable<boolean>;
   isOnline$: Observable<boolean>;
   isRadarOn$: Observable<boolean>;
-  currentPokemons$: Observable<Set<any>>;
+  nearbyPokemons$: Observable<Set<any>>;
 
   constructor(private _navController: NavController, private platform: Platform,
               private geolocationService: GeolocationService,
@@ -39,7 +40,7 @@ export class RadarPage {
       this.isScanning$ = pokeradarService.isScanning$;
       this.isOnline$ = connectivityService.connectionStatus$;
       this.isRadarOn$ = pokeradarService.isRadarOn$;
-      this.currentPokemons$ = pokeradarService.currentPokemons$;
+      this.nearbyPokemons$ = pokeradarService.nearbyPokemons$;
   }
 
   toggleRadar() {
@@ -71,7 +72,7 @@ export class RadarPage {
         this.geolocationService.currentPosition$.first().subscribe((currentPosition) => {
           console.log('INITIALIZING MAP');
           let mapOptions = {
-            zoom: 17,
+            zoom: 15,
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
             draggable: false,
@@ -113,18 +114,32 @@ export class RadarPage {
    */
   private watchPokemons(): void {
     this.pokeradarService.lastPokemon$
-    .distinctUntilChanged()
     .subscribe((pokemon) => {
-      console.log('NEW POKEMON: ' + JSON.stringify(pokemon));
-      this.map.addMarker({
+      //Clean markers
+      console.log('NEW POKEMON: ' + pokemon.name);
+      let marker = new google.maps.Marker({
         position: new google.maps.LatLng(pokemon.latitude, pokemon.longitude),
         title: pokemon.name,
         animation: google.maps.Animation.DROP,
         icon: {
-          url: pokemon.img
+          url: pokemon.icon
         }
       });
+      if (!this.pokemonMarkers.has(marker)) {
+        marker.setMap(this.map);
+        this.pokemonMarkers.add(marker);
+        this.watchPokemonMarkerExpiry(pokemon, marker);
+      }
+      
     });
+  }
+
+  private watchPokemonMarkerExpiry(pokemon, marker): void {
+    let timeBeforeExpiration = pokemon.expiration_time - Date.now();
+    setTimeout(() => {
+      marker.setMap(null);
+      this.pokemonMarkers.delete(marker);
+    }, timeBeforeExpiration);
   }
 
   private showOptionsModal() : void {

@@ -30,4 +30,19 @@ export class PokemonsService {
       return `/img/pokemon_icons/${id}.png`;
   }
 
+  /**
+   * Transform the pokemons received by PokeVision into full pokemon objects
+   */
+  public transformPokemonsById(pokemons: any[]): any[] {
+      return pokemons.map((pokemon) => {
+          let id = pokemon.pokemonId;
+          let fullPokemon = this.getPokemon(id);
+          fullPokemon.icon = this.getPokemonIconURL(id);
+          fullPokemon.longitude = pokemon.longitude;
+          fullPokemon.latitude = pokemon.latitude;
+          fullPokemon.expiration_time = pokemon.expiration_time; 
+          return fullPokemon;
+      });
+  }
+
 }
