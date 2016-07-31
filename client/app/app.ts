@@ -4,7 +4,7 @@ import {StatusBar, Splashscreen} from 'ionic-native';
 
 import {RadarPage} from './pages/radar/radar';
 
-import {HTTP_PROVIDERS} from '@angular/http';
+import {HTTP_PROVIDERS, JSONP_PROVIDERS} from '@angular/http';
 import {GeolocationService} from './services/geolocation/geolocation';
 import {PokeradarService} from './services/pokemon/pokeradar';
 import {PokemonsService} from './services/pokemon/pokemons';
@@ -26,7 +26,8 @@ export class MyApp {
   }
 }
 
-ionicBootstrap(MyApp, [HTTP_PROVIDERS, 
+ionicBootstrap(MyApp, [HTTP_PROVIDERS,
+                      JSONP_PROVIDERS, 
                       GeolocationService, 
                       PokeradarService,
                       PokemonsService, 

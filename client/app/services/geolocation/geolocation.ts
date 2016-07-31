@@ -1,34 +1,34 @@
 import {Injectable} from '@angular/core';
-import {Platform} from 'ionic-angular';
-import {Geolocation} from 'ionic-native';
 import {Observable, BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class GeolocationService {
 
-  private positionWatch: any;
-  private navGeoWatchId: any;
+  private geoWatchId: any;
   private _currentPosition$: BehaviorSubject<any> = BehaviorSubject.create();
   public currentPosition$: Observable<any> = this._currentPosition$.asObservable();
   public DISTANCE_THRESHOLD_IN_METERS: number = 20;
 
-  constructor(public platform: Platform) {
+  constructor() {
     this.startGeoWatch();
   }
 
   startGeoWatch(): void {
     this.stopGeoWatch();
-    this.positionWatch = Geolocation.watchPosition();
-    this.positionWatch.subscribe((newPos) => {
-        console.log('GPS tick');
+    this.geoWatchId = navigator.geolocation.watchPosition(
+      (newPos) => {
+        console.log('[GEOLOCATION] GPS Tick');
         if (newPos.coords)
           this._currentPosition$.next(newPos.coords);
-    });
+       },
+        (err) => {console.error('[GEOLOCATION] Error in watch position', err)},
+        {enableHighAccuracy: true, timeout: 5000}
+      );
   }
 
   stopGeoWatch(): void {
-    if (this.positionWatch)
-        this.positionWatch.unsubscribe();
+    if (this.geoWatchId)
+        navigator.geolocation.clearWatch(this.geoWatchId);
   }
 
   /**

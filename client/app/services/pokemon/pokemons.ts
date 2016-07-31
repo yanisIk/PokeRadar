@@ -18,7 +18,7 @@ export class PokemonsService {
         .map(res => res.json())
         .subscribe(data => this.pokemons = data.pokemons,
                     err => console.log(err),
-                    () => console.log('Loaded Pokemons!'));
+                    () => console.log('[POKEMONS] Loaded Pokemons!'));
       }
   }
 
@@ -41,6 +41,7 @@ export class PokemonsService {
           fullPokemon.longitude = pokemon.longitude;
           fullPokemon.latitude = pokemon.latitude;
           fullPokemon.expiration_time = pokemon.expiration_time; 
+          fullPokemon.uid = Math.random().toString(36).substr(2,9);
           return fullPokemon;
       });
   }

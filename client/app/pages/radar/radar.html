@@ -14,24 +14,24 @@
 		<p>Please connect to the Internet...</p>
 	</div>
 
-	<div *ngIf="(isScanning$ | async)" #scanAnimation id="scanning" class="scanning">
+	<div *ngIf="(isOnline$ && isScanning$ | async)" #scanAnimation id="scanning" class="scanning">
 		<div class="spinner"></div>
 	</div>
 
-  <div #map id="map"></div>
+  <div *ngIf="(isOnline$ | async)" #map id="map"></div>
 
-	<div class="radarToggle">
+	<div *ngIf="(isOnline$ && isMapInitialized$ | async)" class="radarToggle">
 		<b>Radar</b>
 		<ion-toggle [checked]="(isRadarOn$ | async)" (click)="toggleRadar()"></ion-toggle>
 	</div>
 
-	<div *ngIf="(isRadarOn$ | async)" class="halo">
+	<div *ngIf="(isOnline$ && isRadarOn$ | async)" class="halo">
   	<span class="ring ring-2"></span>
 		<span class="ring ring-3"></span>
 	</div>
 
-	<div class="footerStats">
-		<ion-img class="pokeballSmall" src="/img/pokeball.png"></ion-img><b>Nearby Pokemons</b>  <ion-badge>{{pokemonMarkers.size}}</ion-badge>
+	<div *ngIf="(isRadarOn$ | async)" class="footerStats">
+		<ion-img class="pokeballSmall" src="/img/pokeball.png"></ion-img><b>Nearby Pokemons</b>  <ion-badge>{{ pokemonMarkers.size }}</ion-badge>
 	</div>
 
 
